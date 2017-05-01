@@ -70,11 +70,14 @@ app.delete('/todos/:id', (req, res) => {
 
 app.patch('/todos/:id', (req, res) => {
   var id = req.params.id;
+  console.log( "got a request id:"+id);
   var body = _.pick(req.body, ['text', 'completed']);
 
-  if (ObjectID.isValid(id)) {
+  if (!ObjectID.isValid(id)) {
+    console.log( "invalid idiot id:"+id);
     return res.status(404).send();
   }
+
 
   if (_.isBoolean(body.completed) && body.completed) {
     body.completedAt = new Date().getTime();
