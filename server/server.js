@@ -99,6 +99,28 @@ app.patch('/todos/:id', (req, res) => {
   })
 });
 
+app.post('/users', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  var user = new User(body);
+  console.log( "body:"+body);
+  console.log( "user:"+user);
+
+//   user.save().then((user) => {
+//     var myToken = user.generateAuthToken();
+//     console.log( "myToken:"+myToken);
+//     res.header('x-auth', myToken).send(user);
+//   });
+//
+// res.status(204).send("buggy code");
+  user.save().then((user) => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
+  }).catch((e) => {
+    res.status(400).send(e);
+  })
+ });
+
 app.listen(3000, () => {
   console.log('Started on port 3000');
 });
